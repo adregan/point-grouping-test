@@ -18,9 +18,9 @@ def JSONFile(file_path):
     else:
         return points
 
-def build_parser():
-    ''' build_parser: None -> ArgumentParser
-        Builds the command line argument parser.
+def get_args():
+    ''' get_args: None -> argparse.Namespace
+        Builds the command line argument parser and parses the args.
     '''
     parser = argparse.ArgumentParser(
         description='Groups the location of jobs \
@@ -51,8 +51,8 @@ def build_parser():
         default='groups.json',
         help='The name of the outfile. Defaults to `groups.json`.')
 
-    return parser
+    return parser.parse_args()
 
 if __name__ == '__main__':
-    parser = build_parser()
-    args = parser.parse_args()
+    args = get_args()
+
