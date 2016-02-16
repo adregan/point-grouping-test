@@ -19,6 +19,9 @@ def JSONFile(file_path):
         return points
 
 def build_parser():
+    ''' build_parser: None -> ArgumentParser
+        Builds the command line argument parser.
+    '''
     parser = argparse.ArgumentParser(
         description='Groups the location of jobs \
         based on the number of vans available.')
