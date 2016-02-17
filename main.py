@@ -88,25 +88,23 @@ def distribute(vans, number_of_points, centroids):
             vans_more.append(
                 {'index': i, 'centroid': centroids[i], 'count': stops})
 
-    # What I want to do is check that the distance to a point is less 
-    # than the distance between the two centroids
+    vans_less = sorted(vans_less, key=lambda van: van.get('count'))
+    vans_more = sorted(vans_more, key=lambda van: van.get('count'), reverse=True)
+    
+    less = vans_less.pop()
+    more = vans_more.pop()
 
-    while len(vans_less) > 0:
-        try: 
-            more = vans_more.pop()
-        except IndexError:
-            print(more)
-            pass
-
-        less = vans_less.pop()
-
+    while less and more:
         available_points = list(vans[more.get('index')])
         more_center = more.get('centroid')
         less_center = less.get('centroid')
 
         distance_btw_centers = distance(more_center, less_center)
 
-        while len(vans[less.get('index')]) < ideal_avg_points:
+        while (len(vans[less.get('index')]) < ideal_avg_points 
+            and len(vans[more.get('index')]) > ideal_avg_points
+            and len(available_points) > 0):
+
             farthest_distance = 0
             farthest = {}
 
@@ -127,8 +125,19 @@ def distribute(vans, number_of_points, centroids):
             if distance_to_less_center < distance_btw_centers:
                 vans[less.get('index')].append(farthest_point)
                 vans[more.get('index')].pop(farthest.get('index'))
+                available_points.pop(farthest.get('index'))
             else:
                 available_points.pop(farthest.get('index'))
+
+        if len(vans[more.get('index')]) <= ideal_avg_points:
+            try:
+                more = vans_more.pop()
+            except:
+                more = None
+        try:
+            less = vans_less.pop()
+        except IndexError:
+            less = None
 
     return vans
 
