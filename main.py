@@ -3,18 +3,25 @@ import json
 import math
 import numpy as np
 from scipy.cluster.vq import vq, kmeans
+import sys
+from io import TextIOWrapper
 
-def JSONFile(file_path):
+def JSONFile(file_input, stdin=False):
     ''' JSONFile : Str -> List
         Implements a custom argument type that takes a filepath,
         reads the file's data and returns it as loaded JSON.
     '''
     try:
-        with open(file_path, 'r') as file:
-            points = json.loads(file.read())
+        if not stdin:
+            with open(file_input, 'r') as file:
+                points = json.loads(file.read())
+        else:
+            data = file_input.read()
+            points = json.loads(data)
+
     except FileNotFoundError as err:
         raise argparse.ArgumentTypeError(
-            'The file {0} couldn\'t be found'.format(file_path))
+            'The file {0} couldn\'t be found'.format(file_input))
     except json.decoder.JSONDecodeError as err:
         raise argparse.ArgumentTypeError(
             'Couldn\'t parse JSON: {0}'.format(err))
@@ -35,8 +42,8 @@ def get_args():
         '--infile',
         type=JSONFile,
         dest='infile',
-        required=True,
-        help='The path to the input file.')
+        default=sys.stdin,
+        help='The path to the input file. Default is stdin.')
 
     parser.add_argument(
         '-n',
@@ -143,10 +150,15 @@ def distribute(vans, number_of_points, centroids):
 
 def main():
     args = get_args()
-    data = args.infile
+    # This catches files sent in with stdin
+    if isinstance(args.infile, TextIOWrapper):
+        data = JSONFile(args.infile, True)
+    else:
+        data = args.infile
+
     points = np.array([
         [point.get('lon'), point.get('lat')]
-        for point in args.infile
+        for point in data
     ])
 
     centroids, distortion = kmeans(points, args.number_of_vans)
