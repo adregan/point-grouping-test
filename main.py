@@ -155,8 +155,10 @@ def main():
     vans = [[] for _ in range(args.number_of_vans)]
 
     for i, point in enumerate(data):
-        point_id = point.get('id')
-        vans[index[i]].append(point_id)
+        vans[index[i]].append(point)
+
+    vans = distribute(vans, len(data), centroids)
+
 
     create_output(args.outfile, vans)
 
