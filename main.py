@@ -1,5 +1,7 @@
 import argparse
 import json
+import numpy as np
+from scipy.cluster.vq import vq, kmeans, whiten
 
 def JSONFile(file_path):
     ''' JSONFile : Str -> List
@@ -53,6 +55,24 @@ def get_args():
 
     return parser.parse_args()
 
-if __name__ == '__main__':
+def main():
     args = get_args()
+    data = args.infile
+    points = np.array([
+        [point.get('lon'), point.get('lat')]
+        for point in args.infile
+    ])
+    whitened = whiten(points)
+    centroids, distortion = kmeans(whitened, args.number_of_vans)
+    index, distortion = vq(whitened, centroids)
 
+    vans = [[] for _ in range(args.number_of_vans)]
+
+    for i, point in enumerate(data):
+        point_id = point.get('id')
+        vans[index[i]].append(point_id)
+
+    create_output(args.outfile, vans)
+
+if __name__ == '__main__':
+    main()
