@@ -1,31 +1,24 @@
-# point-grouping-test
+## Requirements
 
-A coding challenge for a Platform Engineer.
+- Python 3
+- pip
+- pyvenv
 
-One of the most enduring technical challenges at MakeSpace involves generating the routes that our vans and trucks run every day. A good routing algorithm has to take a group of points on a map and group them according to how many vans we want to run that day. Your job will be to implement this step.
+## To install
 
-## Instructions
+1) `git clone https://github.com/adregan/point-grouping-test.git`
+2) `cd point-grouping-test`
+3) `pyvenv env`
+4) `source env/bin/activate`
+5) `pip install -r requirements.txt`
+6) `python main.py 3 -i points.json -o groups.json`
 
-**Your solution should be presented as a standalone script we can run from command line using different input data files, and obtain corresponding output data files.**
+## Usage
 
-Please include instructions, comments and anything you deem relevant for us to evaluate your solution.
+`python main.py -h` to see all the available options and required arguments. By default, this program accepts input from `stdin` and outputs by default to `stdout`:
 
-You can submit it as a Github repository or compressed file.
+`cat points.json | python main.py 3 > groups.json`
 
-### The main goal: grouping
+You can pass in a file using the `-i` flag and specify your output file with the `-o` flag:
 
-`points.json` is a JSON data file that contains a list of objects representing geographic points, with a `lat`, `lon` and `id`. Your job is to write a Python script that will take an integer argument *n*, then read the file and output the `id`s of all the points, grouped into *n* groups, into a second file, `groups.json`.
-
-Given that the data set represents geographic data, you should try to group points by proximity, so that the geographically closest points are grouped together. You should end up with a clean partitioning of the overall space.
-
-### Stretch goal: distribution
-
-When grouping addresses to produce our daily routes, it's important that each van has roughly the same number of stops to make in a day. Do the same as above, with one final optimization - optimize for both geographical proximity, using the function in the first stretch goal, *and* for equal group size for each van.
-
-## About
-
-This repo contains the instructions and template to complete a coding challenge in Python. It is aimed at Python programmers of mid-level experience and up, and is designed to test the programmer's skill in designing and implementing algorithms. 
-
-No external libraries are required—however, due to the algorithmic/numerical nature of the code at hand, Python libraries that provide robust implementations of various mathematical or statistical algorithms might be useful. The programmer should feel free to calibrate their approach to their own experience level. 
-
-Please do not hesitate to ask us any questions before submitting your solution!
+`python main.py 3 -i points.json -o groups.json`
