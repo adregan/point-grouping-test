@@ -182,7 +182,9 @@ def main():
         for point in data
     ])
 
-    centroids, distortion = kmeans(points, args.number_of_vans)
+    # In testing, found that a higher number of iterations led to less
+    # errors due to missing centroids (Note: whitening led to worse results)
+    centroids, distortion = kmeans(points, args.number_of_vans, 2000)
     index, distortion = vq(points, centroids)
 
     vans = [[] for _ in range(args.number_of_vans)]
