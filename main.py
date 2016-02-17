@@ -95,9 +95,12 @@ def distribute(vans, number_of_points, centroids):
             vans_more.append(
                 {'index': i, 'centroid': centroids[i], 'count': stops})
 
+    if not vans_less:
+        return vans
+
     vans_less = sorted(vans_less, key=lambda van: van.get('count'))
     vans_more = sorted(vans_more, key=lambda van: van.get('count'), reverse=True)
-    
+
     less = vans_less.pop()
     more = vans_more.pop()
 
