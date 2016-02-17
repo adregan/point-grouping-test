@@ -1,5 +1,6 @@
 import argparse
 import json
+import math
 import numpy as np
 from scipy.cluster.vq import vq, kmeans, whiten
 
@@ -134,9 +135,9 @@ def main():
         [point.get('lon'), point.get('lat')]
         for point in args.infile
     ])
-    whitened = whiten(points)
-    centroids, distortion = kmeans(whitened, args.number_of_vans)
-    index, distortion = vq(whitened, centroids)
+
+    centroids, distortion = kmeans(points, args.number_of_vans)
+    index, distortion = vq(points, centroids)
 
     vans = [[] for _ in range(args.number_of_vans)]
 
