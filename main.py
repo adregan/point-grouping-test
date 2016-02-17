@@ -58,18 +58,20 @@ def get_args():
         '--outfile',
         type=str,
         dest='outfile',
-        default='groups.json',
+        default=sys.stdout,
         help='The name of the outfile. Defaults to `groups.json`.')
 
     return parser.parse_args()
 
-def create_output(file_path, vans_data):
+def create_output(outfile, vans_data):
     output = []
     for van in vans_data:
         output.append([p.get('id') for p in van])
-
-    with open(file_path, 'w') as file:
-        file.write(json.dumps(output, indent=2))
+    if isinstance(outfile, TextIOWrapper):
+        outfile.write(json.dumps(output, indent=2))
+    else:
+        with open(outfile, 'w') as file:
+            file.write(json.dumps(output, indent=2))
 
 def distance(point_1, point_2):
     ''' distance: Point Point -> Int
