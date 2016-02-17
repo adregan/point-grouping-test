@@ -34,6 +34,13 @@ def get_args():
     parser = argparse.ArgumentParser(
         description='Groups the location of jobs \
         based on the number of vans available.')
+    # Number of vans is a positional argument and doesn't need a flag
+    # (but is required)
+    parser.add_argument(
+        'number_of_vans',
+        type=int,
+        help='The number of vans running today.'
+    )
 
     # Using custom type to handle the JSON loading
     parser.add_argument(
@@ -44,13 +51,6 @@ def get_args():
         default=sys.stdin,
         help='The path to the input file. Default is stdin.')
 
-    parser.add_argument(
-        '-n',
-        '--number',
-        type=int,
-        dest='number_of_vans',
-        required=True,
-        help='The number of vans running today.')
 
     parser.add_argument(
         '-o',
@@ -58,7 +58,7 @@ def get_args():
         type=str,
         dest='outfile',
         default=sys.stdout,
-        help='The name of the outfile. Defaults to `groups.json`.')
+        help='The name of the outfile. Default is stdout.')
 
     return parser.parse_args()
 
