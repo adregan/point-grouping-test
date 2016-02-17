@@ -6,12 +6,12 @@
 
 ## To install
 
-1) `git clone https://github.com/adregan/point-grouping-test.git`
-2) `cd point-grouping-test`
-3) `pyvenv env`
-4) `source env/bin/activate`
-5) `pip install -r requirements.txt`
-6) `python main.py 3 -i points.json -o groups.json`
+1. `git clone https://github.com/adregan/point-grouping-test.git`
+2. `cd point-grouping-test`
+3. `pyvenv env`
+4. `source env/bin/activate`
+5. `pip install -r requirements.txt`
+6. `python main.py 3 -i points.json -o groups.json`
 
 ## Usage
 
