@@ -63,6 +63,10 @@ def get_args():
     return parser.parse_args()
 
 def create_output(outfile, vans_data):
+    ''' create_output : (Str | IO) List -> IO
+        Can take either a Stdout object or a file name and write
+        the data.
+    '''
     output = []
     for van in vans_data:
         output.append([p.get('id') for p in van])
@@ -82,6 +86,11 @@ def distance(point_1, point_2):
         math.pow((point_2[0]-point_1[0]), 2))
 
 def find_closest_with_more(less, vans_more):
+    ''' find_closest_with_more: Dict List -> Tuple
+        Will find the closest grouping with more points than it needs
+        to the grouping with too few. Returns the closest grouping and an
+        updated list of groupings with more.
+    '''
     vans_more_copy = list(vans_more)
     closest_distance = float('inf')
     more = None
@@ -98,6 +107,11 @@ def find_closest_with_more(less, vans_more):
     return more, vans_more_copy
 
 def distribute(vans, number_of_points, centroids):
+    ''' distribute : List Int List -> List
+        Will try to balance the number of points in a grouping by finding
+        groupings with more points than is ideal and moving them to nearby
+        groupings with too few points.
+    '''
     ideal_avg_points = math.floor(number_of_points / len(vans))
 
     vans_less = []
