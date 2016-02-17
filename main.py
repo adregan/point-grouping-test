@@ -57,8 +57,12 @@ def get_args():
     return parser.parse_args()
 
 def create_output(file_path, vans_data):
+    output = []
+    for van in vans_data:
+        output.append([p.get('id') for p in van])
+
     with open(file_path, 'w') as file:
-        file.write(json.dumps(vans_data, indent=2))
+        file.write(json.dumps(output, indent=2))
 
 def distance(point_1, point_2):
     ''' distance: Point Point -> Int
