@@ -55,6 +55,10 @@ def get_args():
 
     return parser.parse_args()
 
+def create_output(file_path, vans_data):
+    with open(file_path, 'w') as file:
+        file.write(json.dumps(vans_data, indent=2))
+
 def main():
     args = get_args()
     data = args.infile
