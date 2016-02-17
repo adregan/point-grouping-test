@@ -105,7 +105,7 @@ def distribute(vans, number_of_points, centroids):
 
     for i, van in enumerate(vans):
         stops = len(van)
-        if stops < ideal_avg_points:
+        if stops < ideal_avg_points and stops != 0:
             vans_less.append(
                 {'index': i, 'centroid': centroids[i], 'count': stops})
         if stops > ideal_avg_points:
