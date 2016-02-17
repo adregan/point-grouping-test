@@ -59,6 +59,74 @@ def create_output(file_path, vans_data):
     with open(file_path, 'w') as file:
         file.write(json.dumps(vans_data, indent=2))
 
+def distance(point_1, point_2):
+    ''' distance: Point Point -> Int
+        computes the distance between two points
+    '''
+
+    return math.sqrt(
+        math.pow((point_2[1]-point_1[1]), 2) + 
+        math.pow((point_2[0]-point_1[0]), 2))
+
+def distribute(vans, number_of_points, centroids):
+    ideal_avg_points = math.floor(number_of_points / len(vans))
+
+    vans_less = []
+    vans_more = []
+
+    for i, van in enumerate(vans):
+        stops = len(van)
+        if stops < ideal_avg_points:
+            vans_less.append(
+                {'index': i, 'centroid': centroids[i], 'count': stops})
+        if stops > ideal_avg_points:
+            vans_more.append(
+                {'index': i, 'centroid': centroids[i], 'count': stops})
+
+    # What I want to do is check that the distance to a point is less 
+    # than the distance between the two centroids
+
+    while len(vans_less) > 0:
+        try: 
+            more = vans_more.pop()
+        except IndexError:
+            print(more)
+            pass
+
+        less = vans_less.pop()
+
+        available_points = list(vans[more.get('index')])
+        more_center = more.get('centroid')
+        less_center = less.get('centroid')
+
+        distance_btw_centers = distance(more_center, less_center)
+
+        while len(vans[less.get('index')]) < ideal_avg_points:
+            farthest_distance = 0
+            farthest = {}
+
+            for i, point in enumerate(available_points):
+                dist = distance(
+                    more_center, [point.get('lon'), point.get('lat')])
+
+                if dist > farthest_distance:
+                    farthest_distance = dist
+                    farthest['index'] = i
+                    farthest['point'] = point
+
+            farthest_point = farthest.get('point')
+            distance_to_less_center = distance(
+                less_center,
+                [farthest_point.get('lon'), farthest_point.get('lat')])
+
+            if distance_to_less_center < distance_btw_centers:
+                vans[less.get('index')].append(farthest_point)
+                vans[more.get('index')].pop(farthest.get('index'))
+            else:
+                available_points.pop(farthest.get('index'))
+
+    return vans
+
 def main():
     args = get_args()
     data = args.infile
