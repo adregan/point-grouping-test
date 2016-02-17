@@ -18,7 +18,6 @@ def JSONFile(file_input, stdin=False):
         else:
             data = file_input.read()
             points = json.loads(data)
-
     except FileNotFoundError as err:
         raise argparse.ArgumentTypeError(
             'The file {0} couldn\'t be found'.format(file_input))
@@ -82,6 +81,22 @@ def distance(point_1, point_2):
         math.pow((point_2[1]-point_1[1]), 2) + 
         math.pow((point_2[0]-point_1[0]), 2))
 
+def find_closest_with_more(less, vans_more):
+    vans_more_copy = list(vans_more)
+    closest_distance = float('inf')
+    more = None
+    more_index = None
+    for i, van in enumerate(vans_more):
+        dist = distance(less.get('centroid'), van.get('centroid'))
+        if dist < closest_distance:
+            closest_distance = dist
+            more_index = i
+
+    if more_index != None:
+        more = vans_more_copy.pop(more_index)
+
+    return more, vans_more_copy
+
 def distribute(vans, number_of_points, centroids):
     ideal_avg_points = math.floor(number_of_points / len(vans))
 
@@ -104,7 +119,7 @@ def distribute(vans, number_of_points, centroids):
     vans_more = sorted(vans_more, key=lambda van: van.get('count'), reverse=True)
 
     less = vans_less.pop()
-    more = vans_more.pop()
+    more, vans_more = find_closest_with_more(less, vans_more)
 
     while less and more:
         available_points = list(vans[more.get('index')])
@@ -141,15 +156,16 @@ def distribute(vans, number_of_points, centroids):
             else:
                 available_points.pop(farthest.get('index'))
 
-        if len(vans[more.get('index')]) <= ideal_avg_points:
-            try:
-                more = vans_more.pop()
-            except:
-                more = None
         try:
             less = vans_less.pop()
         except IndexError:
             less = None
+
+        if len(vans[more.get('index')]) <= ideal_avg_points:
+            try:
+                more, vans_more = find_closest_with_more(less, vans_more)
+            except:
+                more = None
 
     return vans
 
