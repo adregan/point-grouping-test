@@ -2,7 +2,7 @@ import argparse
 import json
 import math
 import numpy as np
-from scipy.cluster.vq import vq, kmeans, whiten
+from scipy.cluster.vq import vq, kmeans
 
 def JSONFile(file_path):
     ''' JSONFile : Str -> List
